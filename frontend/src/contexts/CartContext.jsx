@@ -1,57 +1,59 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
 
-export function useCart() {
-  return useContext(CartContext);
-}
+export const useCart = () => useContext(CartContext);
 
-export function CartProvider({ children }) {
+export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [showCart, setShowCart] = useState(false);
+  const [showCart, setShowCart] = useState(false); 
 
-  function addToCart(product) {
-    setCartItems((prev) => {
-      const exist = prev.find(item => item.id === product.id);
-      if (exist) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-        );
+  const addToCart = (product) => {
+    setCartItems(prevItems => {
+      const itemIndex = prevItems.findIndex(item => item.id === product.id);
+      if (itemIndex > -1) {
+        // Jika produk sudah ada, update quantity
+        const newItems = [...prevItems];
+        newItems[itemIndex].qty += 1;
+        return newItems;
+      } else {
+        // Jika produk belum ada, tambahkan sebagai item baru
+        return [...prevItems, { ...product, qty: 1 }];
       }
-      return [...prev, { ...product, qty: 1 }];
     });
-    setShowCart(true); 
-  }
+  };
 
-  function removeFromCart(id) {
-    setCartItems((prev) => prev.filter(item => item.id !== id));
-  }
+  const removeFromCart = (id) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+  };
 
-  function updateQty(id, qty) {
-    setCartItems((prev) =>
-      prev.map(item =>
-        item.id === id ? { ...item, qty: Math.max(1, qty) } : item
-      )
-    );
-  }
+  const updateQty = (id, newQty) => {
+    if (newQty <= 0) {
+        removeFromCart(id); 
+    } else {
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.id === id ? { ...item, qty: newQty } : item
+            )
+        );
+    }
+  };
 
-  function clearCart() {
+  const clearCart = () => {
     setCartItems([]);
-  }
-
-  const value = {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    updateQty,
-    clearCart,
-    showCart,
-    setShowCart,
   };
 
   return (
-    <CartContext.Provider value={value}>
+    <CartContext.Provider value={{
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQty,
+      clearCart,
+      showCart, 
+      setShowCart
+    }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
