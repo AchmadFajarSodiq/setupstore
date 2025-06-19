@@ -5,6 +5,8 @@
   align-items: flex-start;
   justify-content: center;
   position: relative;
+  background-size: cover;
+  background-position: center;
 }
 
 .hero-overlay {
@@ -13,7 +15,7 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  padding-top: 120px; /* Biar judul & subjudul turun, tidak mepet navbar */
+  padding-top: 120px;
 }
 
 .hero-section h1 {
@@ -45,6 +47,10 @@
 }
 
 @media (max-width: 700px) {
+  .hero-section {
+    min-height: 60vh;
+    background-position: center top;
+  }
   .hero-overlay {
     padding-top: 80px;
   }

@@ -1,6 +1,9 @@
 import './ModalPreview.css';
+import { useCart } from '../contexts/CartContext'; 
 
-export default function ModalPreview({ open, onClose, produk, onAddCart }) {
+export default function ModalPreview({ open, onClose, produk }) {
+  const { addToCart } = useCart();
+
   if (!open || !produk) return null;
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -23,7 +26,15 @@ export default function ModalPreview({ open, onClose, produk, onAddCart }) {
         )}
         <button
           className="modal-add-cart-btn"
-          onClick={() => onAddCart && onAddCart(produk)}
+          onClick={() => {
+            addToCart({
+              id: produk.id,
+              name: produk.nama,
+              price: produk.harga,
+              image: produk.img,
+            });
+            onClose(); 
+          }}
         >
           Tambahkan ke Keranjang
         </button>

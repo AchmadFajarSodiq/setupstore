@@ -3,6 +3,8 @@ import { useState } from 'react';
 import KategoriDropdown from '../components/KategoriDropdown';
 import ModalPreview from '../components/ModalPreview';
 import './ProdukPage.css';
+import Icon from 'feather-icons-react'; // Feather Icons
+import { useCart } from '../contexts/CartContext'; // <-- Tambahkan ini
 
 // Import gambar produk
 import fantechVenom from '../assets/images/mouse/fantech-venom-wgc2.jpg';
@@ -170,6 +172,7 @@ const produkData = {
   ],
 };
 
+// NOTE: KategoriList untuk landing page
 const kategoriList = [
   {
     value: 'keyboard',
@@ -203,6 +206,8 @@ export default function KategoriPage() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [previewProduk, setPreviewProduk] = useState(null);
+
+  const { addToCart } = useCart(); // <-- Gunakan context cart
 
   const handlePilihKategori = (kat) => navigate(`/produk/${kat}`);
 
@@ -254,30 +259,46 @@ export default function KategoriPage() {
               className="produk-card"
               key={item.id}
               onClick={() => { setPreviewProduk(item); setModalOpen(true); }}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer' }} 
             >
+              {/* Overlay ikon */}
               <div className="produk-card-actions">
                 <button
                   className="cart-btn"
                   title="Tambah ke Keranjang"
-                  onClick={(e) => { e.stopPropagation(); alert('Keranjang belum diimplementasi!'); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart({
+                      id: item.id,
+                      name: item.nama,
+                      price: item.harga,
+                      image: item.img
+                    });
+                  }}
                 >
-                  <i className="fa fa-shopping-cart"></i>
+                  <Icon icon="shopping-cart" size={20} />
                 </button>
                 <button
                   className="preview-btn"
                   title="Preview Produk"
                   onClick={(e) => { e.stopPropagation(); setPreviewProduk(item); setModalOpen(true); }}
                 >
-                  <i className="fa fa-eye"></i>
+                   <Icon icon="eye" size={20} />
                 </button>
               </div>
+              {/* Gambar produk */}
               <img
                 src={item.img}
                 alt={item.nama}
                 className="produk-img"
+                onClick={() => { setPreviewProduk(item); setModalOpen(true); }}
+                style={{ cursor: 'pointer' }} 
               />
-              <div className="produk-info">
+              {/* Info produk */}
+              <div className="produk-info"
+                   onClick={() => { setPreviewProduk(item); setModalOpen(true); }}
+                   style={{ cursor: 'pointer' }}
+              >
                 <div className="produk-nama">{item.nama}</div>
                 <div className="produk-rating">{'★'.repeat(item.rating)}</div>
                 <div className="produk-harga">Rp {item.harga.toLocaleString()}</div>
