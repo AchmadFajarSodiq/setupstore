@@ -34,7 +34,6 @@ export default function CartSidebar() {
 
   const handleLogin = (username, password) => {
     setIsLoggedIn(true);
-    setUser({ username });
     setAuthMode(null);
   };
 
