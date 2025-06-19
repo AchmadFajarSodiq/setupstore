@@ -17,7 +17,6 @@ export default function CartSidebar() {
 
   const [authMode, setAuthMode] = useState(null); // null | "login" | "register"
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false); // state untuk modal popup
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
