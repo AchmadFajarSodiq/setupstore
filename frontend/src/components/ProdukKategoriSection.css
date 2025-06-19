@@ -1,0 +1,176 @@
+.produk-section {
+  background: #111;
+  color: #fff;
+  padding: 56px 0 70px 0;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.produk-section h2 {
+  font-size: 2.1rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+  margin-top: 0;
+}
+.produk-highlight {
+  color: #c49b63;
+  font-weight: 900;
+}
+.produk-subtitle {
+  color: #d0d0d0;
+  font-size: 1.13rem;
+  margin-bottom: 32px;
+  margin-top: 0;
+}
+
+/* Pyramid Layout */
+.produk-grid-pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.produk-row {
+  display: flex;
+  gap: 28px;
+}
+
+.produk-row-3 {
+  justify-content: center;
+}
+
+.produk-row-2 {
+  justify-content: center;
+  /* Trik agar 2 card di bawah pas di tengah 3 di atas */
+  margin-top: 0;
+  margin-left: 100px;
+}
+
+.produk-card {
+  background: #181818;
+  border: 2px solid #282828;
+  border-radius: 18px;
+  width: 150px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: 
+    box-shadow 0.18s,
+    border 0.18s,
+    background 0.18s,
+    transform 0.16s;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+  cursor: pointer;
+  padding: 18px 0 12px 0;
+  margin-bottom: 2px;
+  outline: none;
+}
+
+/* Fade up animasi masuk */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  animation: fadeUp 0.7s cubic-bezier(.23,1.02,.54,.97) forwards;
+}
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.produk-card:focus,
+.produk-card:hover {
+  border: 2.5px solid #c49b63;
+  box-shadow: 0 8px 32px rgba(196,155,99,0.18), 0 2px 12px rgba(0,0,0,0.13);
+  background: #232323;
+  transform: translateY(-7px);
+}
+
+/* Tidak ada scaling besar, tidak ada efek getar/berulang! */
+
+.produk-card:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(196,155,99,0.10), 0 1px 6px rgba(0,0,0,0.11);
+}
+
+.produk-icon {
+  width: 96px;
+  height: 96px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  transition: box-shadow 0.18s;
+}
+.produk-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.produk-name {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+  letter-spacing: 0.2px;
+  margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .produk-section {
+    padding: 36px 0 48px 0;
+  }
+  .produk-row, .produk-row-3, .produk-row-2 {
+    gap: 14px;
+  }
+  .produk-row-2 {
+    margin-left: 40px;
+  }
+  .produk-card {
+    width: 100px;
+    min-height: 100px;
+    padding: 10px 0 7px 0;
+  }
+  .produk-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 6px;
+  }
+  .produk-icon img {
+    width: 18px;
+    height: 18px;
+  }
+  .produk-name {
+    font-size: 0.92rem;
+  }
+}
+@media (max-width: 600px) {
+  .produk-section h2 {
+    font-size: 1.2rem;
+  }
+  .produk-grid-pyramid {
+    gap: 10px;
+  }
+  .produk-row, .produk-row-3, .produk-row-2 {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+    gap: 8px;
+  }
+  .produk-card {
+    width: 90vw;
+    min-width: 0;
+    margin-bottom: 6px;
+    padding: 8px 0 6px 0;
+  }
+}

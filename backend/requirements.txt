@@ -1,0 +1,6 @@
+Django==5.2.1
+djangorestframework
+Pillow
+djangorestframework-simplejwt
+django-cors-headers
+psycopg2-binary

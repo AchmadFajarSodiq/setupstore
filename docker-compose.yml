@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  setupstore_postgres:
+    image: postgres:17.5
+    container_name: setupstore_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: setupstore_db
+      POSTGRES_USER: setupstore_user1050
+      POSTGRES_PASSWORD: setupstore_pass31525
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: setupstore_backend
+    command: >
+      sh -c "python wait_for_db.py &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - setupstore_postgres
+    environment:
+      - DJANGO_DB_HOST=setupstore_postgres
+      - DJANGO_DB_NAME=setupstore_db
+      - DJANGO_DB_USER=setupstore_user1050
+      - DJANGO_DB_PASSWORD=setupstore_pass31525
+      - DJANGO_DB_PORT=5432
+
+volumes:
+  postgres_data:
