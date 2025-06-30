@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import { useCart } from '../contexts/CartContext'; 
@@ -6,11 +6,14 @@ import { useCart } from '../contexts/CartContext';
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { setShowCart, cartItems } = useCart(); 
 
-  // Jumlah produk unik di cart
   const cartCount = cartItems.length;
 
   useEffect(() => {
@@ -20,6 +23,31 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (showSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showSearch]);
+
+  // Optional: close search when click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.parentNode.contains(event.target) &&
+        showSearch
+      ) {
+        setShowSearch(false);
+      }
+    }
+    if (showSearch) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSearch]);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -43,6 +71,15 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setShowSearch(false);
+      setSearchQuery('');
+    }
+  };
+
   return (
     <nav className={`navbar${isScrolled ? ' navbar-scrolled' : ''}`}>
       <div className="navbar-content">
@@ -51,7 +88,6 @@ export default function Navbar() {
           <span className="brand-store">Store</span>
         </div>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`}>
-          {/* Tombol X, hanya tampil di mobile */}
           <button
             className="close-btn"
             onClick={() => setMenuOpen(false)}
@@ -66,11 +102,41 @@ export default function Navbar() {
           <li><button className="nav-btn" onClick={() => handleNavClick('kontak')}>Kontak</button></li>
         </ul>
         <div className="nav-icons">
-          <button className="icon-btn" aria-label="Search">
-            <svg className="icon-img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-              <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-            </svg>
-          </button>
+          {/* SEARCH BOX */}
+          <div className="search-box-navbar" style={{ position: 'relative' }}>
+            {showSearch ? (
+              <form onSubmit={handleSearchSubmit} className="search-form-navbar">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search here..."
+                  className="search-input-navbar"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  className="close-search-btn"
+                  onClick={() => setShowSearch(false)}
+                  aria-label="Tutup Search"
+                >
+                  ×
+                </button>
+              </form>
+            ) : (
+              <button
+                className="icon-btn search-btn-navbar"
+                aria-label="Search"
+                onClick={() => setShowSearch(true)}
+                style={{ position: 'relative', zIndex: 10 }}
+              >
+                <svg className="icon-img" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                  <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+              </button>
+            )}
+          </div>
           <button
             className="icon-btn cart-btn-navbar"
             aria-label="Cart"

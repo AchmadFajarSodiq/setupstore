@@ -201,13 +201,21 @@ const kategoriList = [
   },
 ];
 
+const kategoriMap = {
+  keyboard: 'Keyboard',
+  mouse: 'Mouse',
+  headphone: 'Headphone',
+  speaker: 'Speaker',
+  monitor: 'Monitor',
+};
+
 export default function KategoriPage() {
   const { kategori } = useParams();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [previewProduk, setPreviewProduk] = useState(null);
 
-  const { addToCart } = useCart(); // <-- Gunakan context cart
+  const { addToCart } = useCart();
 
   const handlePilihKategori = (kat) => navigate(`/produk/${kat}`);
 
@@ -238,10 +246,17 @@ export default function KategoriPage() {
     );
   }
 
-  // Halaman produk per kategori
+  // Judul otomatis dari mapping, fallback kapitalisasi
+  const judulKategori =
+    kategoriMap[kategori] ||
+    kategori.charAt(0).toUpperCase() + kategori.slice(1);
+
   return (
     <div className="produk-page">
-      <div className="produk-header">
+      <div className="produk-header-judul">
+        <h1 className="produk-title">{judulKategori}</h1>
+      </div>
+      <div className="produk-header-bawah">
         <button className="produk-back-btn" onClick={() => navigate(-1)}>
           <svg width="28" height="28" fill="none">
             <path d="M18 24l-8-8 8-8" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

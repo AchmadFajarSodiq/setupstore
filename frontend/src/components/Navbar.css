@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   z-index: 99;
-  background: rgba(17, 17, 17, 0.97);
+  background: rgba(17, 17, 17, 0.97); /* Solid saat di atas */
   transition: background 0.28s cubic-bezier(.4,.2,.2,1), box-shadow 0.28s;
   backdrop-filter: blur(8px);
   box-shadow: 0 2px 12px rgba(0,0,0,0.10);
@@ -12,6 +12,13 @@
   display: flex;
   align-items: center;
 }
+
+.navbar.navbar-scrolled {
+  background: rgba(17, 17, 17, 0.68); 
+  backdrop-filter: blur(10px);        
+  box-shadow: 0 2px 18px rgba(0,0,0,0.18);
+}
+
 
 .navbar-content {
   width: 100%;
@@ -24,6 +31,66 @@
   box-sizing: border-box;
   height: 64px;
   position: relative;
+}
+
+.search-box-navbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-form-navbar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  padding: 4px 8px 4px 12px;
+  min-width: 230px;
+  height: 38px;
+  z-index: 20;
+}
+
+.search-input-navbar {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+  min-width: 120px;
+  background: transparent;
+  flex: 1;
+}
+
+.close-search-btn {
+  background: transparent;
+  border: none;
+  color: #f31800;
+  font-size: 2.1rem;    
+  margin-left: 12px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 10px;     
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.close-search-btn:hover {
+  color: #b91d1d;
+}
+
+.search-btn-navbar {
+  z-index: 10;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 8px;
+  cursor: pointer;
 }
 
 .brand {
@@ -178,13 +245,13 @@
   .close-btn {
     display: block;
     position: absolute;
-    top: 20px;    /* pastikan tidak terlalu kecil */
+    top: 20px;    
     right: 20px;
     background: none;
     border: none;
     color: #fff;
     font-size: 2.2rem;
-    z-index: 105; /* lebih tinggi dari .nav-links */
+    z-index: 105; 
     cursor: pointer;
     padding: 0;
     line-height: 1;
@@ -304,4 +371,32 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.18);
   z-index: 2;
   border: 2px solid #fff;
+}
+
+@media (max-width: 600px) {
+  .search-form-navbar {
+    min-width: 0;
+    width: 58vw;              
+    max-width: 240px;        
+    right: 0;                 
+    left: auto;
+    transform: translateY(-50%);
+    padding: 4px 6px 4px 10px;
+    height: 38px;
+    box-sizing: border-box;
+    z-index: 20;
+  }
+
+  .search-input-navbar {
+    font-size: 1rem;
+    min-width: 0;
+    width: 100%;
+    padding: 6px 4px;
+  }
+
+  .close-search-btn {
+    font-size: 2.3rem;
+    margin-left: 8px;
+    padding: 0 8px;
+  }
 }
