@@ -14,25 +14,49 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  setupstore_mysql:
+    image: mysql:8.4 
+    container_name: setupstore_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_root
+      MYSQL_DATABASE: setupstore_mysql_db
+      MYSQL_USER: mysql_1075
+      MYSQL_PASSWORD: mysql_10725
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   backend:
     build: ./backend
     container_name: setupstore_backend
     command: >
-      sh -c "python wait_for_db.py &&
+      sh -c "/wait-for-it.sh setupstore_postgres:5432 --timeout=60 --strict -- 
+             /wait-for-it.sh setupstore_mysql:3306 --timeout=60 --strict -- 
              python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+             python manage.py migrate --database=mysql_db &&
+             gunicorn setupstore.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - ./backend:/app
+      - ./backend/staticfiles:/app/staticfiles
     ports:
       - "8000:8000"
     depends_on:
       - setupstore_postgres
+      - setupstore_mysql
     environment:
       - DJANGO_DB_HOST=setupstore_postgres
       - DJANGO_DB_NAME=setupstore_db
       - DJANGO_DB_USER=setupstore_user1050
       - DJANGO_DB_PASSWORD=setupstore_pass31525
       - DJANGO_DB_PORT=5432
+      - MYSQL_DB_HOST=setupstore_mysql
+      - MYSQL_DB_NAME=setupstore_mysql_db
+      - MYSQL_DB_USER=mysql_1075
+      - MYSQL_DB_PASSWORD=mysql_10725
+      - MYSQL_DB_PORT=3306
 
 volumes:
   postgres_data:
+  mysql_data:
